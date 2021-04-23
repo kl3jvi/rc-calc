@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">RCC Calculator</string>
+
+    <string-array name="number_bands">
+        <item>4 Bands</item>
+        <item>5 Bands</item>
+        <item>6 Bands</item>
+    </string-array>
+
 </resources>

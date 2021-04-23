@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.18385416666666668" />
+        <entry key="app/src/main/res/drawable/resistor_4_band.xml" value="0.18385416666666668" />
+        <entry key="app/src/main/res/drawable/resistor_5_band.xml" value="0.18385416666666668" />
+        <entry key="app/src/main/res/drawable/resistor_6_band.xml" value="0.18385416666666668" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.31354166666666666" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.18385416666666668" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.3338541666666667" />
+      </map>
+    </option>
+  </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
