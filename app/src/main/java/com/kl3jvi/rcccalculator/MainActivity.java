@@ -2,13 +2,18 @@ package com.kl3jvi.rcccalculator;
 
 import static com.kl3jvi.rcccalculator.utils.ArrayInitialiser.initArrays;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +22,7 @@ import com.kl3jvi.rcccalculator.adapters.ColorAdapter;
 import com.kl3jvi.rcccalculator.adapters.ColorDetails;
 import com.sdsmdg.harjot.vectormaster.VectorMasterDrawable;
 import com.sdsmdg.harjot.vectormaster.models.PathModel;
+import com.yarolegovich.lovelydialog.LovelyStandardDialog;
 
 import java.util.ArrayList;
 
@@ -86,7 +92,10 @@ public class MainActivity extends AppCompatActivity {
         multiplier_band_listener(multiplier_band);
 
         tolerance_band.setAdapter(toleranceAdapter);
+        tolerance_band_listener(tolerance_band);
+
         temperature_band.setAdapter(temperatureAdapter);
+        temperature_band_listener(temperature_band);
 
         resistor_4 = new VectorMasterDrawable(this, R.drawable.resistor_4_band);
         resistor_5 = new VectorMasterDrawable(this, R.drawable.resistor_5_band);
@@ -94,18 +103,97 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        int itemId = item.getItemId();
+        if (itemId == R.id.search) {
+
+            return true;
+        } else if (itemId == R.id.history) {
+            new LovelyStandardDialog(this, LovelyStandardDialog.ButtonLayout.VERTICAL)
+                    .setTopColorRes(R.color.purple_500)
+                    .setButtonsColorRes(R.color.purple_700)
+                    .setIcon(R.drawable.ic_baseline_history_24)
+                    .setTitle("History")
+
+                    .show();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
+
+    private void temperature_band_listener(Spinner temperature_band) {
+        temperature_band.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                int color = temperatureArray.get(position).getDrawable();
+
+                PathModel res6_band6 = resistor_6.getPathModelByName("bc");
+                res6_band6.setFillColor(color);
+
+                resistor_6.update();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private void tolerance_band_listener(Spinner tolerance_band) {
+        tolerance_band.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                int color = toleranceArray.get(position).getDrawable();
+
+                PathModel res3_band5 = resistor_4.getPathModelByName("bt");
+                PathModel res5_band5 = resistor_5.getPathModelByName("bt");
+                PathModel res6_band5 = resistor_6.getPathModelByName("bt");
+
+                res3_band5.setFillColor(color);
+                res5_band5.setFillColor(color);
+                res6_band5.setFillColor(color);
+
+                resistor_4.update();
+                resistor_5.update();
+                resistor_6.update();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+
     private void multiplier_band_listener(Spinner multiplier_band) {
         multiplier_band.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 int color = mttArray.get(position).getDrawable();
 
-                PathModel res5_band3 = resistor_5.getPathModelByName("bm");
-                PathModel res6_band3 = resistor_6.getPathModelByName("bm");
+                PathModel res3_band4 = resistor_4.getPathModelByName("bm");
+                PathModel res5_band4 = resistor_5.getPathModelByName("bm");
+                PathModel res6_band4 = resistor_6.getPathModelByName("bm");
 
-                res5_band3.setFillColor(color);
-                res6_band3.setFillColor(color);
+                res3_band4.setFillColor(color);
+                res5_band4.setFillColor(color);
+                res6_band4.setFillColor(color);
 
+                resistor_4.update();
                 resistor_5.update();
                 resistor_6.update();
             }

@@ -37,6 +37,8 @@ dependencies {
     // vector library to change colors;
     implementation 'com.sdsmdg.harjot:vectormaster:1.1.3'
 
+    // Library for the beautiful dialogs I always use maaan
+    implementation 'com.yarolegovich:lovely-dialog:1.1.1'
 
 
     testImplementation 'junit:junit:4.13.2'
