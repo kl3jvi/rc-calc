@@ -3,12 +3,14 @@ package com.kl3jvi.rcccalculator.adapters;
 public class ColorDetails {
     private String colorName;
     private String quantity;
-    private int color;
+    private int drawable;
 
-    public ColorDetails(String colorName, String quantity, int color) {
+
+
+    public ColorDetails(String colorName, String quantity, int drawable) {
         this.colorName = colorName;
         this.quantity = quantity;
-        this.color = color;
+        this.drawable = drawable;
     }
 
     public String getColorName() {
@@ -27,11 +29,11 @@ public class ColorDetails {
         this.quantity = quantity;
     }
 
-    public int getColor() {
-        return color;
+    public int getDrawable() {
+        return drawable;
     }
 
-    public void setColor(int color) {
-        this.color = color;
+    public void setDrawable(int drawable) {
+        this.drawable = drawable;
     }
 }

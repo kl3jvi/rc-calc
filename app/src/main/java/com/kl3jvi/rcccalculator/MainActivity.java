@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
 
         imageView = findViewById(R.id.imageView);
         spinBands = findViewById(R.id.spinBands);
-//        initList();
 
         // Spinner that listens to band changes --> put on a method for ease;
         spinnerListener(spinBands);
@@ -40,19 +39,25 @@ public class MainActivity extends AppCompatActivity {
         spin_band1 = findViewById(R.id.band1);
         colorDetails = new ArrayList<>();
 
-
-
-        colorDetails.add(new ColorDetails("Black", "0", 1));
-        colorDetails.add(new ColorDetails("Red", "1", 1));
-        colorDetails.add(new ColorDetails("Yellow", "2", 1));
+        initList();
 
         colorAdapter = new ColorAdapter(this,R.layout.band_spinner_row,R.id.colorName,colorDetails);
         spin_band1.setAdapter(colorAdapter);
 
-
-
     }
 
+
+    public void initList(){
+        colorDetails.add(new ColorDetails("Brown","1",Color.parseColor("#6b3d00")));
+        colorDetails.add(new ColorDetails("Red", "2",Color.parseColor("#d40000")));
+        colorDetails.add(new ColorDetails("Orange", "3",Color.parseColor("#FFA500")));
+        colorDetails.add(new ColorDetails("Yellow", "4",Color.parseColor("#FFFF00")));
+        colorDetails.add(new ColorDetails("Green", "5",Color.parseColor("#008000")));
+        colorDetails.add(new ColorDetails("Blue", "6",Color.parseColor("#0000FF")));
+        colorDetails.add(new ColorDetails("Violet", "7",Color.parseColor("#EE82EE")));
+        colorDetails.add(new ColorDetails("Grey", "8",Color.parseColor("#808080")));
+        colorDetails.add(new ColorDetails("White", "9",Color.parseColor("#FFFFFF")));
+    }
 
 
     public void spinnerListener(Spinner spinBands) {
