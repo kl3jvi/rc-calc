@@ -30,6 +30,7 @@ public class ColorAdapter extends ArrayAdapter<ColorDetails> {
         int color = getItem(position).getDrawable();
 
         ColorDetails colorDetails = new ColorDetails(colorName, quantity, color);
+
         LayoutInflater inflater = LayoutInflater.from(mcontext);
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.band_spinner_row, parent, false);
@@ -48,7 +49,6 @@ public class ColorAdapter extends ArrayAdapter<ColorDetails> {
             quantityText.setText(quantity);
             background.setTint(color);
         }
-
 
         return convertView;
     }

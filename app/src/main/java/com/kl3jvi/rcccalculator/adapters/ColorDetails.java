@@ -5,8 +5,6 @@ public class ColorDetails {
     private String quantity;
     private int drawable;
 
-
-
     public ColorDetails(String colorName, String quantity, int drawable) {
         this.colorName = colorName;
         this.quantity = quantity;
