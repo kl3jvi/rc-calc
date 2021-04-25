@@ -28,8 +28,9 @@ public class ColorAdapter extends ArrayAdapter<ColorDetails> {
         String colorName = getItem(position).getColorName();
         String quantity = getItem(position).getQuantity();
         int color = getItem(position).getDrawable();
+        double number = getItem(position).getNumber();
 
-        ColorDetails colorDetails = new ColorDetails(colorName, quantity, color);
+        ColorDetails colorDetails = new ColorDetails(colorName, quantity, number, color);
 
         LayoutInflater inflater = LayoutInflater.from(mcontext);
         if (convertView == null) {
@@ -40,9 +41,7 @@ public class ColorAdapter extends ArrayAdapter<ColorDetails> {
         TextView quantityText = convertView.findViewById(R.id.quantity);
         ImageView colorTint = convertView.findViewById(R.id.colorTint);
 
-
         Drawable background = colorTint.getBackground();
-
         ColorDetails currentItem = getItem(position);
         if (currentItem != null) {
             colorNameText.setText(colorName);
@@ -57,8 +56,9 @@ public class ColorAdapter extends ArrayAdapter<ColorDetails> {
         String colorName = getItem(position).getColorName();
         String quantity = getItem(position).getQuantity();
         int color = getItem(position).getDrawable();
+        double number = getItem(position).getNumber();
 
-        ColorDetails colorDetails = new ColorDetails(colorName, quantity, color);
+        ColorDetails colorDetails = new ColorDetails(colorName, quantity, number, color);
         LayoutInflater inflater = LayoutInflater.from(mcontext);
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.band_spinner_row, parent, false);
@@ -68,6 +68,7 @@ public class ColorAdapter extends ArrayAdapter<ColorDetails> {
         TextView quantityText = convertView.findViewById(R.id.quantity);
         ImageView colorTint = convertView.findViewById(R.id.colorTint);
 
+
         Drawable background = colorTint.getBackground();
 
         ColorDetails currentItem = getItem(position);
@@ -76,6 +77,7 @@ public class ColorAdapter extends ArrayAdapter<ColorDetails> {
             quantityText.setText(quantity);
             background.setTint(color);
         }
+
         return convertView;
     }
 }

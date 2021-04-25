@@ -6,11 +6,15 @@
         <entry key="../../../../layout/custom_preview.xml" value="0.4498239436619718" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.18385416666666668" />
         <entry key="app/src/main/res/drawable/color_pick.xml" value="0.3338541666666667" />
+        <entry key="app/src/main/res/drawable/dropdown_bg.xml" value="0.3338541666666667" />
+        <entry key="app/src/main/res/drawable/ic_resistor.xml" value="0.3338541666666667" />
         <entry key="app/src/main/res/drawable/resistor_4_band.xml" value="0.18385416666666668" />
         <entry key="app/src/main/res/drawable/resistor_5_band.xml" value="0.18385416666666668" />
         <entry key="app/src/main/res/drawable/resistor_6_band.xml" value="0.18385416666666668" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.31354166666666666" />
         <entry key="app/src/main/res/layout/band_spinner_row.xml" value="0.31354166666666666" />
+        <entry key="app/src/main/res/layout/list_item.xml" value="0.31354166666666666" />
+        <entry key="app/src/main/res/menu/band_spinners.xml" value="0.31354166666666666" />
         <entry key="app/src/main/res/menu/main_menu.xml" value="0.31354166666666666" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.18385416666666668" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.3338541666666667" />

@@ -2,18 +2,17 @@ package com.kl3jvi.rcccalculator;
 
 import static com.kl3jvi.rcccalculator.utils.ArrayInitialiser.initArrays;
 
-import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,8 +32,10 @@ public class MainActivity extends AppCompatActivity {
     private ColorAdapter firstAdapter, elseAdapter, mttAdapter, toleranceAdapter;
     private LinearLayout firstBandLayout, secondBandLayout, thirdBandLayout, multiplierLayout, toleranceLayout, temperatureLayout;
     private ColorAdapter temperatureAdapter;
-
+    private TextView result;
     private VectorMasterDrawable resistor_4, resistor_5, resistor_6;
+    private String[] selections;
+    private AutoCompleteTextView td;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +51,12 @@ public class MainActivity extends AppCompatActivity {
         imageView = findViewById(R.id.imageView);
         spinBands = findViewById(R.id.spinBands);
 
+        td = findViewById(R.id.drp);
+
+
         // Spinner that listens to band changes --> put on a method for ease;
         // Changes from 4 to 5 to 6 bands;
-        spinnerListener(spinBands);
+        spinnerListener(td);
 
         // Initialisation of the spinner views
         spin_band1 = findViewById(R.id.band1);
@@ -69,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
         multiplierLayout = findViewById(R.id.multiplierLayout);
         toleranceLayout = findViewById(R.id.toleranceLayout);
         temperatureLayout = findViewById(R.id.temperatureLayout);
+        result = findViewById(R.id.result);
 
         // Initialise and fill arrays;
         initArrays(firstBandArray, elseBandArray, mttArray, toleranceArray, temperatureArray);
@@ -101,6 +106,11 @@ public class MainActivity extends AppCompatActivity {
         resistor_5 = new VectorMasterDrawable(this, R.drawable.resistor_5_band);
         resistor_6 = new VectorMasterDrawable(this, R.drawable.resistor_6_band);
 
+
+        imageView.setImageDrawable(resistor_4);
+        thirdBandLayout.setVisibility(View.GONE);
+        temperatureLayout.setVisibility(View.GONE);
+
     }
 
     @Override
@@ -129,8 +139,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
 
 
     private void temperature_band_listener(Spinner temperature_band) {
@@ -169,6 +177,7 @@ public class MainActivity extends AppCompatActivity {
                 resistor_4.update();
                 resistor_5.update();
                 resistor_6.update();
+
             }
 
             @Override
@@ -184,6 +193,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 int color = mttArray.get(position).getDrawable();
+                String no = mttArray.get(position).getQuantity();
 
                 PathModel res3_band4 = resistor_4.getPathModelByName("bm");
                 PathModel res5_band4 = resistor_5.getPathModelByName("bm");
@@ -233,6 +243,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 int color = elseBandArray.get(position).getDrawable();
+                String no = firstBandArray.get(position).getQuantity();
+
                 PathModel res4_band2 = resistor_4.getPathModelByName("b2");
                 PathModel res5_band2 = resistor_5.getPathModelByName("b2");
                 PathModel res6_band2 = resistor_6.getPathModelByName("b2");
@@ -244,6 +256,7 @@ public class MainActivity extends AppCompatActivity {
                 resistor_4.update();
                 resistor_5.update();
                 resistor_6.update();
+
             }
 
             @Override
@@ -254,10 +267,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void spin_band1_listener(Spinner spin_band1) {
+
         spin_band1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 int color = firstBandArray.get(position).getDrawable();
+                double no = firstBandArray.get(position).getNumber();
+
                 PathModel res4_band1 = resistor_4.getPathModelByName("b1");
                 PathModel res5_band1 = resistor_5.getPathModelByName("b1");
                 PathModel res6_band1 = resistor_6.getPathModelByName("b1");
@@ -278,37 +294,30 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void spinnerListener(@NonNull Spinner spinBands) {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, getResources()
+    public void spinnerListener(@NonNull AutoCompleteTextView spinBands) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this,
+                R.layout.list_item, getResources()
                 .getStringArray(R.array.number_bands));
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinBands.setAdapter(adapter);
-        spinBands.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) {
-                    case 0:
-                        imageView.setImageDrawable(resistor_4);
-                        thirdBandLayout.setVisibility(View.GONE);
-                        temperatureLayout.setVisibility(View.GONE);
-                        break;
-                    case 1:
-                        imageView.setImageDrawable(resistor_5);
-                        thirdBandLayout.setVisibility(View.VISIBLE);
-                        temperatureLayout.setVisibility(View.GONE);
-                        break;
-                    case 2:
-                        imageView.setImageDrawable(resistor_6);
-                        thirdBandLayout.setVisibility(View.VISIBLE);
-                        temperatureLayout.setVisibility(View.VISIBLE);
-                        break;
-                }
-            }
+        td.setText(adapter.getItem(0), false);
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
+        spinBands.setOnItemClickListener((parent, view, position, id) -> {
+            switch (position) {
+                case 0:
+                    imageView.setImageDrawable(resistor_4);
+                    thirdBandLayout.setVisibility(View.GONE);
+                    temperatureLayout.setVisibility(View.GONE);
+                    break;
+                case 1:
+                    imageView.setImageDrawable(resistor_5);
+                    thirdBandLayout.setVisibility(View.VISIBLE);
+                    temperatureLayout.setVisibility(View.GONE);
+                    break;
+                case 2:
+                    imageView.setImageDrawable(resistor_6);
+                    thirdBandLayout.setVisibility(View.VISIBLE);
+                    temperatureLayout.setVisibility(View.VISIBLE);
+                    break;
             }
         });
     }

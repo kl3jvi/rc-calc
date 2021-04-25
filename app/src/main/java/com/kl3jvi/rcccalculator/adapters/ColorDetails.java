@@ -1,14 +1,18 @@
 package com.kl3jvi.rcccalculator.adapters;
 
 public class ColorDetails {
+
     private String colorName;
     private String quantity;
     private int drawable;
+    private double number;
 
-    public ColorDetails(String colorName, String quantity, int drawable) {
+
+    public ColorDetails(String colorName, String quantity,double number, int drawable) {
         this.colorName = colorName;
         this.quantity = quantity;
         this.drawable = drawable;
+        this.number = number;
     }
 
     public String getColorName() {
@@ -33,5 +37,13 @@ public class ColorDetails {
 
     public void setDrawable(int drawable) {
         this.drawable = drawable;
+    }
+
+    public double getNumber() {
+        return number;
+    }
+
+    public void setNumber(double number) {
+        this.number = number;
     }
 }
