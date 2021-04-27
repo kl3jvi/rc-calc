@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.kl3jvi.rcccalculator.adapters.ColorAdapter;
 import com.kl3jvi.rcccalculator.adapters.ColorDetails;
+import com.kl3jvi.rcccalculator.utils.ArrayInitialiser;
 import com.sdsmdg.harjot.vectormaster.VectorMasterDrawable;
 import com.sdsmdg.harjot.vectormaster.models.PathModel;
 import com.yarolegovich.lovelydialog.LovelyStandardDialog;
@@ -32,9 +33,9 @@ public class MainActivity extends AppCompatActivity {
     private ColorAdapter firstAdapter, elseAdapter, mttAdapter, toleranceAdapter;
     private LinearLayout firstBandLayout, secondBandLayout, thirdBandLayout, multiplierLayout, toleranceLayout, temperatureLayout;
     private ColorAdapter temperatureAdapter;
-    private TextView result;
+    private TextView result,resultTolerance;
     private VectorMasterDrawable resistor_4, resistor_5, resistor_6;
-    private String[] selections;
+    private int[] fourBandSelections,fiveBandSelections,sixBandSelections;
     private AutoCompleteTextView td;
 
     @Override
@@ -74,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         toleranceLayout = findViewById(R.id.toleranceLayout);
         temperatureLayout = findViewById(R.id.temperatureLayout);
         result = findViewById(R.id.result);
+        resultTolerance = findViewById(R.id.resultTolerance);
 
         // Initialise and fill arrays;
         initArrays(firstBandArray, elseBandArray, mttArray, toleranceArray, temperatureArray);
@@ -86,21 +88,28 @@ public class MainActivity extends AppCompatActivity {
 
         spin_band1.setAdapter(firstAdapter);
         spin_band1_listener(spin_band1);
+        spin_band1.setSelection(0);
 
         spin_band2.setAdapter(elseAdapter);
         spin_band2_listener(spin_band2);
+        spin_band2.setSelection(0);
 
         spin_band3.setAdapter(elseAdapter);
         spin_band3_listener(spin_band3);
+        spin_band3.setSelection(0);
 
         multiplier_band.setAdapter(mttAdapter);
         multiplier_band_listener(multiplier_band);
+        multiplier_band.setSelection(0);
 
         tolerance_band.setAdapter(toleranceAdapter);
         tolerance_band_listener(tolerance_band);
+        tolerance_band.setSelection(0);
 
         temperature_band.setAdapter(temperatureAdapter);
         temperature_band_listener(temperature_band);
+        temperature_band.setSelection(0);
+
 
         resistor_4 = new VectorMasterDrawable(this, R.drawable.resistor_4_band);
         resistor_5 = new VectorMasterDrawable(this, R.drawable.resistor_5_band);
@@ -111,6 +120,9 @@ public class MainActivity extends AppCompatActivity {
         thirdBandLayout.setVisibility(View.GONE);
         temperatureLayout.setVisibility(View.GONE);
 
+
+
+        fourBandSelections = new int[3];
     }
 
     @Override
@@ -165,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 int color = toleranceArray.get(position).getDrawable();
-
+                String tolerance = toleranceArray.get(position).getQuantity();
                 PathModel res3_band5 = resistor_4.getPathModelByName("bt");
                 PathModel res5_band5 = resistor_5.getPathModelByName("bt");
                 PathModel res6_band5 = resistor_6.getPathModelByName("bt");
@@ -177,6 +189,7 @@ public class MainActivity extends AppCompatActivity {
                 resistor_4.update();
                 resistor_5.update();
                 resistor_6.update();
+                resultTolerance.setText("Ω "+tolerance);
 
             }
 
@@ -193,7 +206,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 int color = mttArray.get(position).getDrawable();
-                String no = mttArray.get(position).getQuantity();
+                double no = firstBandArray.get(position).getNumber();
+                fourBandSelections[2] = (int) no;
 
                 PathModel res3_band4 = resistor_4.getPathModelByName("bm");
                 PathModel res5_band4 = resistor_5.getPathModelByName("bm");
@@ -206,6 +220,9 @@ public class MainActivity extends AppCompatActivity {
                 resistor_4.update();
                 resistor_5.update();
                 resistor_6.update();
+
+                int resultatis = ArrayInitialiser.calculate4Band(fourBandSelections[0],fourBandSelections[1],fourBandSelections[2]);
+                result.setText(ArrayInitialiser.getRoughNumber(resultatis));
             }
 
             @Override
@@ -243,8 +260,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 int color = elseBandArray.get(position).getDrawable();
-                String no = firstBandArray.get(position).getQuantity();
-
+                double no = firstBandArray.get(position).getNumber();
+                fourBandSelections[1] = (int) no;
                 PathModel res4_band2 = resistor_4.getPathModelByName("b2");
                 PathModel res5_band2 = resistor_5.getPathModelByName("b2");
                 PathModel res6_band2 = resistor_6.getPathModelByName("b2");
@@ -257,6 +274,8 @@ public class MainActivity extends AppCompatActivity {
                 resistor_5.update();
                 resistor_6.update();
 
+                int resultatis = ArrayInitialiser.calculate4Band(fourBandSelections[0],fourBandSelections[1],fourBandSelections[2]);
+                result.setText(ArrayInitialiser.getRoughNumber(resultatis));
             }
 
             @Override
@@ -273,6 +292,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 int color = firstBandArray.get(position).getDrawable();
                 double no = firstBandArray.get(position).getNumber();
+                fourBandSelections[0] = (int) no;
 
                 PathModel res4_band1 = resistor_4.getPathModelByName("b1");
                 PathModel res5_band1 = resistor_5.getPathModelByName("b1");
@@ -285,6 +305,10 @@ public class MainActivity extends AppCompatActivity {
                 resistor_4.update();
                 resistor_5.update();
                 resistor_6.update();
+
+                int resultatis = ArrayInitialiser.calculate4Band(fourBandSelections[0],fourBandSelections[1],fourBandSelections[2]);
+                result.setText(ArrayInitialiser.getRoughNumber(resultatis));
+
             }
 
             @Override
