@@ -3,6 +3,7 @@ package com.kl3jvi.rcccalculator;
 import static com.kl3jvi.rcccalculator.utils.ArrayInitialiser.initArrays;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -206,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 int color = mttArray.get(position).getDrawable();
-                double no = firstBandArray.get(position).getNumber();
+                double no = mttArray.get(position).getNumber();
                 fourBandSelections[2] = (int) no;
 
                 PathModel res3_band4 = resistor_4.getPathModelByName("bm");
@@ -260,8 +261,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 int color = elseBandArray.get(position).getDrawable();
-                double no = firstBandArray.get(position).getNumber();
+                double no = elseBandArray.get(position).getNumber();
                 fourBandSelections[1] = (int) no;
+                Log.e("Number",no+"");
                 PathModel res4_band2 = resistor_4.getPathModelByName("b2");
                 PathModel res5_band2 = resistor_5.getPathModelByName("b2");
                 PathModel res6_band2 = resistor_6.getPathModelByName("b2");
