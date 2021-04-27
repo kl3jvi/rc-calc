@@ -222,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
                 resistor_5.update();
                 resistor_6.update();
 
-                int resultatis = ArrayInitialiser.calculate4Band(fourBandSelections[0],fourBandSelections[1],fourBandSelections[2]);
+                long resultatis = ArrayInitialiser.calculate4Band(fourBandSelections[0],fourBandSelections[1],fourBandSelections[2]);
                 result.setText(ArrayInitialiser.getRoughNumber(resultatis));
             }
 
@@ -276,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
                 resistor_5.update();
                 resistor_6.update();
 
-                int resultatis = ArrayInitialiser.calculate4Band(fourBandSelections[0],fourBandSelections[1],fourBandSelections[2]);
+                long resultatis = ArrayInitialiser.calculate4Band(fourBandSelections[0],fourBandSelections[1],fourBandSelections[2]);
                 result.setText(ArrayInitialiser.getRoughNumber(resultatis));
             }
 
@@ -308,7 +308,7 @@ public class MainActivity extends AppCompatActivity {
                 resistor_5.update();
                 resistor_6.update();
 
-                int resultatis = ArrayInitialiser.calculate4Band(fourBandSelections[0],fourBandSelections[1],fourBandSelections[2]);
+                long resultatis = ArrayInitialiser.calculate4Band(fourBandSelections[0],fourBandSelections[1],fourBandSelections[2]);
                 result.setText(ArrayInitialiser.getRoughNumber(resultatis));
 
             }

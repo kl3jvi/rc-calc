@@ -72,12 +72,15 @@ public class ArrayInitialiser {
         if (value <= 999) {
             return String.valueOf(value);
         }
-        final String[] units = new String[]{"", "K", "M", "G", "P"};
+
+        final String[] units = new String[]{"", "K", "M", "G"};
         int digitGroups = (int) (Math.log10(value) / Math.log10(1000));
         return new DecimalFormat("#,##0.#").format(value / Math.pow(1000, digitGroups)) + "" + units[digitGroups];
+
     }
 
-    public static int calculate4Band(int band1,int band2,int multiplicator){
+
+    public static long calculate4Band(long band1,long band2,long multiplicator){
         return ((band1*10)+band2) * multiplicator;
     }
 }
