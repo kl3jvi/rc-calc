@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 
-public class ArrayInitialiser {
+public class Calculator {
 
     public static void initArrays(ArrayList<ColorDetails>... arrays) {
 
@@ -70,13 +70,14 @@ public class ArrayInitialiser {
     }
 
     public static String getRoughNumber(double value) {
+
         if (value <= 999) {
             return String.valueOf(value);
         }
 
         final String[] units = new String[]{"", "K", "M", "G"};
         int digitGroups = (int) (Math.log10(value) / Math.log10(1000));
-        BigDecimal bd = new BigDecimal(value / Math.pow(1000, digitGroups)).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal bd = new BigDecimal(value / Math.pow(1000, digitGroups)).setScale(2, RoundingMode.HALF_UP).stripTrailingZeros();
         double newVal = bd.doubleValue();
         return newVal + "" + units[digitGroups];
     }
@@ -87,6 +88,8 @@ public class ArrayInitialiser {
     }
 
     public static double calculate5Band(double band1, double band2, double band3, double multiplicator) {
-        return (band1 + (band2 * 10) + (band3*100)) * multiplicator;
+        return ((band1 * 100) + (band2 * 10) + band3) * multiplicator;
     }
+
+
 }

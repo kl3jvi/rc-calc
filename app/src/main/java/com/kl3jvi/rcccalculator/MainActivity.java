@@ -1,6 +1,6 @@
 package com.kl3jvi.rcccalculator;
 
-import static com.kl3jvi.rcccalculator.utils.ArrayInitialiser.initArrays;
+import static com.kl3jvi.rcccalculator.utils.Calculator.initArrays;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -20,12 +20,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.kl3jvi.rcccalculator.adapters.ColorAdapter;
 import com.kl3jvi.rcccalculator.adapters.ColorDetails;
-import com.kl3jvi.rcccalculator.utils.ArrayInitialiser;
+import com.kl3jvi.rcccalculator.utils.Calculator;
 import com.sdsmdg.harjot.vectormaster.VectorMasterDrawable;
 import com.sdsmdg.harjot.vectormaster.models.PathModel;
 import com.yarolegovich.lovelydialog.LovelyStandardDialog;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -35,10 +34,11 @@ public class MainActivity extends AppCompatActivity {
     private ColorAdapter firstAdapter, elseAdapter, mttAdapter, toleranceAdapter;
     private LinearLayout firstBandLayout, secondBandLayout, thirdBandLayout, multiplierLayout, toleranceLayout, temperatureLayout;
     private ColorAdapter temperatureAdapter;
-    private TextView result,resultTolerance;
+    private TextView result, resultTolerance, resultTemperature;
     private VectorMasterDrawable resistor_4, resistor_5, resistor_6;
-    private double[] fourBandSelections,fiveBandSelections,sixBandSelections;
+    private double[] fourBandSelections, fiveBandSelections, sixBandSelections;
     private AutoCompleteTextView td;
+    private int state = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +78,9 @@ public class MainActivity extends AppCompatActivity {
         temperatureLayout = findViewById(R.id.temperatureLayout);
         result = findViewById(R.id.result);
         resultTolerance = findViewById(R.id.resultTolerance);
+        resultTemperature = findViewById(R.id.resultTemperature);
+        resultTemperature.setVisibility(View.GONE);
+
 
         // Initialise and fill arrays;
         initArrays(firstBandArray, elseBandArray, mttArray, toleranceArray, temperatureArray);
@@ -123,8 +126,9 @@ public class MainActivity extends AppCompatActivity {
         temperatureLayout.setVisibility(View.GONE);
 
 
-
         fourBandSelections = new double[3];
+        fiveBandSelections = new double[4];
+        sixBandSelections = new double[5];
     }
 
     @Override
@@ -160,11 +164,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 int color = temperatureArray.get(position).getDrawable();
+                String temperature = temperatureArray.get(position).getQuantity();
 
                 PathModel res6_band6 = resistor_6.getPathModelByName("bc");
                 res6_band6.setFillColor(color);
 
                 resistor_6.update();
+                resultTemperature.setText(" @" + temperature);
+
             }
 
             @Override
@@ -191,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
                 resistor_4.update();
                 resistor_5.update();
                 resistor_6.update();
-                resultTolerance.setText("Ω "+tolerance);
+                resultTolerance.setText("Ω " + tolerance);
 
             }
 
@@ -210,6 +217,7 @@ public class MainActivity extends AppCompatActivity {
                 int color = mttArray.get(position).getDrawable();
                 double no = mttArray.get(position).getNumber();
                 fourBandSelections[2] = no;
+                fiveBandSelections[3] = no;
 
                 PathModel res3_band4 = resistor_4.getPathModelByName("bm");
                 PathModel res5_band4 = resistor_5.getPathModelByName("bm");
@@ -223,10 +231,13 @@ public class MainActivity extends AppCompatActivity {
                 resistor_5.update();
                 resistor_6.update();
 
-                DecimalFormat df2 = new DecimalFormat("#.##");
-                double resultatis = ArrayInitialiser.calculate4Band(fourBandSelections[0],fourBandSelections[1],fourBandSelections[2]);
-
-                result.setText(ArrayInitialiser.getRoughNumber(resultatis));
+                if (state == 4) {
+                    double resultati4band = Calculator.calculate4Band(fourBandSelections[0], fourBandSelections[1], fourBandSelections[2]);
+                    result.setText(Calculator.getRoughNumber(resultati4band));
+                } else {
+                    double resultati5band = Calculator.calculate5Band(fiveBandSelections[0], fiveBandSelections[1], fiveBandSelections[2], fiveBandSelections[3]);
+                    result.setText(Calculator.getRoughNumber(resultati5band));
+                }
             }
 
             @Override
@@ -241,6 +252,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 int color = elseBandArray.get(position).getDrawable();
+                double no = elseBandArray.get(position).getNumber();
+
+                fiveBandSelections[2] = no;
 
                 PathModel res5_band3 = resistor_5.getPathModelByName("b3");
                 PathModel res6_band3 = resistor_6.getPathModelByName("b3");
@@ -250,6 +264,11 @@ public class MainActivity extends AppCompatActivity {
 
                 resistor_5.update();
                 resistor_6.update();
+
+                if (state != 4) {
+                    double resultati5band = Calculator.calculate5Band(fiveBandSelections[0], fiveBandSelections[1], fiveBandSelections[2], fiveBandSelections[3]);
+                    result.setText(Calculator.getRoughNumber(resultati5band));
+                }
             }
 
             @Override
@@ -265,8 +284,10 @@ public class MainActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 int color = elseBandArray.get(position).getDrawable();
                 double no = elseBandArray.get(position).getNumber();
-                fourBandSelections[1] = (int) no;
-                Log.e("Number",no+"");
+                fourBandSelections[1] = no;
+                fiveBandSelections[1] = no;
+
+                Log.e("Number", no + "");
                 PathModel res4_band2 = resistor_4.getPathModelByName("b2");
                 PathModel res5_band2 = resistor_5.getPathModelByName("b2");
                 PathModel res6_band2 = resistor_6.getPathModelByName("b2");
@@ -279,9 +300,13 @@ public class MainActivity extends AppCompatActivity {
                 resistor_5.update();
                 resistor_6.update();
 
-                double resultat4band = ArrayInitialiser.calculate4Band(fourBandSelections[0],fourBandSelections[1],fourBandSelections[2]);
-                result.setText(ArrayInitialiser.getRoughNumber(resultat4band));
-
+                if (state == 4) {
+                    double resultati4band = Calculator.calculate4Band(fourBandSelections[0], fourBandSelections[1], fourBandSelections[2]);
+                    result.setText(Calculator.getRoughNumber(resultati4band));
+                } else {
+                    double resultati5band = Calculator.calculate5Band(fiveBandSelections[0], fiveBandSelections[1], fiveBandSelections[2], fiveBandSelections[3]);
+                    result.setText(Calculator.getRoughNumber(resultati5band));
+                }
             }
 
             @Override
@@ -298,7 +323,10 @@ public class MainActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 int color = firstBandArray.get(position).getDrawable();
                 double no = firstBandArray.get(position).getNumber();
-                fourBandSelections[0] = (int) no;
+                fourBandSelections[0] = no;
+                fiveBandSelections[0] = no;
+                sixBandSelections[0] = no;
+
 
                 PathModel res4_band1 = resistor_4.getPathModelByName("b1");
                 PathModel res5_band1 = resistor_5.getPathModelByName("b1");
@@ -312,14 +340,17 @@ public class MainActivity extends AppCompatActivity {
                 resistor_5.update();
                 resistor_6.update();
 
-                double resultatis = ArrayInitialiser.calculate4Band(fourBandSelections[0],fourBandSelections[1],fourBandSelections[2]);
-                result.setText(ArrayInitialiser.getRoughNumber(resultatis));
-
+                if (state == 4) {
+                    double resultati4band = Calculator.calculate4Band(fourBandSelections[0], fourBandSelections[1], fourBandSelections[2]);
+                    result.setText(Calculator.getRoughNumber(resultati4band));
+                } else {
+                    double resultati5band = Calculator.calculate5Band(fiveBandSelections[0], fiveBandSelections[1], fiveBandSelections[2], fiveBandSelections[3]);
+                    result.setText(Calculator.getRoughNumber(resultati5band));
+                }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
     }
@@ -337,16 +368,22 @@ public class MainActivity extends AppCompatActivity {
                     imageView.setImageDrawable(resistor_4);
                     thirdBandLayout.setVisibility(View.GONE);
                     temperatureLayout.setVisibility(View.GONE);
+                    resultTemperature.setVisibility(View.GONE);
+                    state = 4;
                     break;
                 case 1:
                     imageView.setImageDrawable(resistor_5);
                     thirdBandLayout.setVisibility(View.VISIBLE);
                     temperatureLayout.setVisibility(View.GONE);
+                    resultTemperature.setVisibility(View.GONE);
+                    state = 5;
                     break;
                 case 2:
                     imageView.setImageDrawable(resistor_6);
                     thirdBandLayout.setVisibility(View.VISIBLE);
                     temperatureLayout.setVisibility(View.VISIBLE);
+                    resultTemperature.setVisibility(View.VISIBLE);
+                    state = 6;
                     break;
             }
         });
