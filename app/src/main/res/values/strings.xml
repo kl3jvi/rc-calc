@@ -1,11 +1,20 @@
 <resources>
     <string name="app_name">RCC Calculator</string>
     <string name="hint_text">Choose # of bands</string>
+    <string name="search">Search</string>
+    <string name="cancel">Cancel</string>
 
     <string-array name="number_bands">
         <item>4 Bands</item>
         <item>5 Bands</item>
         <item>6 Bands</item>
+    </string-array>
+
+    <string-array name="ohm_size">
+        <item>Ω</item>
+        <item>kΩ</item>
+        <item>MΩ</item>
+        <item>GΩ</item>
     </string-array>
 
 </resources>

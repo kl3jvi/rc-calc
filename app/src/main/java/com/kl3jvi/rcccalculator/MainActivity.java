@@ -2,20 +2,25 @@ package com.kl3jvi.rcccalculator;
 
 import static com.kl3jvi.rcccalculator.utils.Calculator.initArrays;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.kl3jvi.rcccalculator.adapters.ColorAdapter;
@@ -23,7 +28,7 @@ import com.kl3jvi.rcccalculator.adapters.ColorDetails;
 import com.kl3jvi.rcccalculator.utils.Calculator;
 import com.sdsmdg.harjot.vectormaster.VectorMasterDrawable;
 import com.sdsmdg.harjot.vectormaster.models.PathModel;
-import com.yarolegovich.lovelydialog.LovelyStandardDialog;
+import com.yarolegovich.lovelydialog.LovelyCustomDialog;
 
 import java.util.ArrayList;
 
@@ -39,11 +44,14 @@ public class MainActivity extends AppCompatActivity {
     private double[] fourBandSelections, fiveBandSelections, sixBandSelections;
     private AutoCompleteTextView td;
     private int state = 4;
+    private ArrayAdapter<String> adapter, ohmSizesAdapter;
+    private LovelyCustomDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         firstBandArray = new ArrayList<>();
         elseBandArray = new ArrayList<>();
@@ -115,20 +123,18 @@ public class MainActivity extends AppCompatActivity {
         temperature_band_listener(temperature_band);
         temperature_band.setSelection(0);
 
-
         resistor_4 = new VectorMasterDrawable(this, R.drawable.resistor_4_band);
         resistor_5 = new VectorMasterDrawable(this, R.drawable.resistor_5_band);
         resistor_6 = new VectorMasterDrawable(this, R.drawable.resistor_6_band);
-
 
         imageView.setImageDrawable(resistor_4);
         thirdBandLayout.setVisibility(View.GONE);
         temperatureLayout.setVisibility(View.GONE);
 
-
         fourBandSelections = new double[3];
         fiveBandSelections = new double[4];
         sixBandSelections = new double[5];
+
     }
 
     @Override
@@ -143,16 +149,8 @@ public class MainActivity extends AppCompatActivity {
         // Handle item selection
         int itemId = item.getItemId();
         if (itemId == R.id.search) {
-
-            return true;
-        } else if (itemId == R.id.history) {
-            new LovelyStandardDialog(this, LovelyStandardDialog.ButtonLayout.VERTICAL)
-                    .setTopColorRes(R.color.purple_500)
-                    .setButtonsColorRes(R.color.purple_700)
-                    .setIcon(R.drawable.ic_baseline_history_24)
-                    .setTitle("History")
-
-                    .show();
+//            dialog.show();
+            showDialog();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -171,7 +169,6 @@ public class MainActivity extends AppCompatActivity {
 
                 resistor_6.update();
                 resultTemperature.setText(" @" + temperature);
-
             }
 
             @Override
@@ -356,7 +353,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void spinnerListener(@NonNull AutoCompleteTextView spinBands) {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this,
+        adapter = new ArrayAdapter<>(MainActivity.this,
                 R.layout.list_item, getResources()
                 .getStringArray(R.array.number_bands));
         spinBands.setAdapter(adapter);
@@ -387,5 +384,68 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         });
+    }
+
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void showDialog() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("Search Resistor");
+        builder.setIcon(R.drawable.resistor_4_band);
+        builder.setPositiveButton("Search", null);
+        builder.setNegativeButton("Cancel", null);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.search_dialog, null);
+
+
+        ohmSizesAdapter = new ArrayAdapter<>(MainActivity.this,
+                android.R.layout.simple_list_item_1, getResources()
+                .getStringArray(R.array.ohm_size));
+
+        EditText size = dialogView.findViewById(R.id.resistanceSize);
+
+        // Makes X drawable in the end to clear text;
+        size.setOnTouchListener((v, event) -> {
+            final int DRAWABLE_RIGHT = 2;
+
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (event.getRawX() >= (size.getRight() - size.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                    // your action here
+                    size.getText().clear();
+                    return true;
+                }
+            }
+            return false;
+        });
+
+        Spinner bandSp = dialogView.findViewById(R.id.bandSp);
+        Spinner ohmSize = dialogView.findViewById(R.id.ohmSize);
+        Spinner temp = dialogView.findViewById(R.id.tempSpinner);
+        Spinner toleranceSpinner = dialogView.findViewById(R.id.toleranceSpinner);
+
+        bandSp.setAdapter(adapter);
+        bandSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        ohmSize.setAdapter(ohmSizesAdapter);
+        toleranceSpinner.setAdapter(toleranceAdapter);
+        temp.setAdapter(temperatureAdapter);
+
+
+        builder.setView(dialogView);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+
     }
 }

@@ -6,12 +6,6 @@
         android:icon="@drawable/ic_baseline_search_24"
         android:orderInCategory="100"
         app:showAsAction="ifRoom"
-        android:title="Setting" />
+        android:title="Search" />
 
-    <item
-        android:id="@+id/history"
-        android:icon="@drawable/ic_baseline_history_24"
-        android:orderInCategory="200"
-        app:showAsAction="always"
-        android:title="History" />
 </menu>
