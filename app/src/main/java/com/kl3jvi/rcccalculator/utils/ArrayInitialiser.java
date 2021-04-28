@@ -4,7 +4,8 @@ import android.graphics.Color;
 
 import com.kl3jvi.rcccalculator.adapters.ColorDetails;
 
-import java.text.DecimalFormat;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 
 public class ArrayInitialiser {
@@ -39,7 +40,7 @@ public class ArrayInitialiser {
         arrays[2].add(new ColorDetails("Yellow", "10⁴", 10000, Color.parseColor("#FFFF00")));
         arrays[2].add(new ColorDetails("Green", "10⁵", 100000, Color.parseColor("#008000")));
         arrays[2].add(new ColorDetails("Blue", "10⁶", 1000000, Color.parseColor("#0000FF")));
-        arrays[2].add(new ColorDetails("Violet", "10⁷", 1000000, Color.parseColor("#EE82EE")));
+        arrays[2].add(new ColorDetails("Violet", "10⁷", 10000000, Color.parseColor("#EE82EE")));
         arrays[2].add(new ColorDetails("Grey", "10⁸", 100000000, Color.parseColor("#808080")));
         arrays[2].add(new ColorDetails("White", "10⁹", 1000000000, Color.parseColor("#FFFFFF")));
         arrays[2].add(new ColorDetails("Gold", "10⁻¹", 0.1, Color.parseColor("#b8860b")));
@@ -68,19 +69,24 @@ public class ArrayInitialiser {
         arrays[4].add(new ColorDetails("Grey", "1ppm/°C", 0, Color.parseColor("#808080")));
     }
 
-    public static String getRoughNumber(long value) {
+    public static String getRoughNumber(double value) {
         if (value <= 999) {
             return String.valueOf(value);
         }
 
         final String[] units = new String[]{"", "K", "M", "G"};
         int digitGroups = (int) (Math.log10(value) / Math.log10(1000));
-        return new DecimalFormat("#,##0.#").format(value / Math.pow(1000, digitGroups)) + "" + units[digitGroups];
-
+        BigDecimal bd = new BigDecimal(value / Math.pow(1000, digitGroups)).setScale(2, RoundingMode.HALF_UP);
+        double newVal = bd.doubleValue();
+        return newVal + "" + units[digitGroups];
     }
 
 
-    public static long calculate4Band(long band1,long band2,long multiplicator){
-        return ((band1*10)+band2) * multiplicator;
+    public static double calculate4Band(double band1, double band2, double multiplicator) {
+        return ((band1 * 10) + band2) * multiplicator;
+    }
+
+    public static double calculate5Band(double band1, double band2, double band3, double multiplicator) {
+        return (band1 + (band2 * 10) + (band3*100)) * multiplicator;
     }
 }

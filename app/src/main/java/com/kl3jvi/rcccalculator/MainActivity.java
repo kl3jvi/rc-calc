@@ -25,6 +25,7 @@ import com.sdsmdg.harjot.vectormaster.VectorMasterDrawable;
 import com.sdsmdg.harjot.vectormaster.models.PathModel;
 import com.yarolegovich.lovelydialog.LovelyStandardDialog;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private ColorAdapter temperatureAdapter;
     private TextView result,resultTolerance;
     private VectorMasterDrawable resistor_4, resistor_5, resistor_6;
-    private int[] fourBandSelections,fiveBandSelections,sixBandSelections;
+    private double[] fourBandSelections,fiveBandSelections,sixBandSelections;
     private AutoCompleteTextView td;
 
     @Override
@@ -123,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        fourBandSelections = new int[3];
+        fourBandSelections = new double[3];
     }
 
     @Override
@@ -208,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 int color = mttArray.get(position).getDrawable();
                 double no = mttArray.get(position).getNumber();
-                fourBandSelections[2] = (int) no;
+                fourBandSelections[2] = no;
 
                 PathModel res3_band4 = resistor_4.getPathModelByName("bm");
                 PathModel res5_band4 = resistor_5.getPathModelByName("bm");
@@ -222,7 +223,9 @@ public class MainActivity extends AppCompatActivity {
                 resistor_5.update();
                 resistor_6.update();
 
-                long resultatis = ArrayInitialiser.calculate4Band(fourBandSelections[0],fourBandSelections[1],fourBandSelections[2]);
+                DecimalFormat df2 = new DecimalFormat("#.##");
+                double resultatis = ArrayInitialiser.calculate4Band(fourBandSelections[0],fourBandSelections[1],fourBandSelections[2]);
+
                 result.setText(ArrayInitialiser.getRoughNumber(resultatis));
             }
 
@@ -276,8 +279,9 @@ public class MainActivity extends AppCompatActivity {
                 resistor_5.update();
                 resistor_6.update();
 
-                long resultatis = ArrayInitialiser.calculate4Band(fourBandSelections[0],fourBandSelections[1],fourBandSelections[2]);
-                result.setText(ArrayInitialiser.getRoughNumber(resultatis));
+                double resultat4band = ArrayInitialiser.calculate4Band(fourBandSelections[0],fourBandSelections[1],fourBandSelections[2]);
+                result.setText(ArrayInitialiser.getRoughNumber(resultat4band));
+
             }
 
             @Override
@@ -308,7 +312,7 @@ public class MainActivity extends AppCompatActivity {
                 resistor_5.update();
                 resistor_6.update();
 
-                long resultatis = ArrayInitialiser.calculate4Band(fourBandSelections[0],fourBandSelections[1],fourBandSelections[2]);
+                double resultatis = ArrayInitialiser.calculate4Band(fourBandSelections[0],fourBandSelections[1],fourBandSelections[2]);
                 result.setText(ArrayInitialiser.getRoughNumber(resultatis));
 
             }
