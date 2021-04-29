@@ -19,7 +19,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -28,7 +27,6 @@ import com.kl3jvi.rcccalculator.adapters.ColorDetails;
 import com.kl3jvi.rcccalculator.utils.Calculator;
 import com.sdsmdg.harjot.vectormaster.VectorMasterDrawable;
 import com.sdsmdg.harjot.vectormaster.models.PathModel;
-import com.yarolegovich.lovelydialog.LovelyCustomDialog;
 
 import java.util.ArrayList;
 
@@ -45,13 +43,12 @@ public class MainActivity extends AppCompatActivity {
     private AutoCompleteTextView td;
     private int state = 4;
     private ArrayAdapter<String> adapter, ohmSizesAdapter;
-    private LovelyCustomDialog dialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         firstBandArray = new ArrayList<>();
         elseBandArray = new ArrayList<>();
@@ -228,11 +225,11 @@ public class MainActivity extends AppCompatActivity {
                 resistor_6.update();
 
                 if (state == 4) {
-                    double resultati4band = Calculator.calculate4Band(fourBandSelections[0], fourBandSelections[1], fourBandSelections[2]);
-                    result.setText(Calculator.getRoughNumber(resultati4band));
+                    double result4band = Calculator.calculate4Band(fourBandSelections[0], fourBandSelections[1], fourBandSelections[2]);
+                    result.setText(Calculator.getRoughNumber(result4band));
                 } else {
-                    double resultati5band = Calculator.calculate5Band(fiveBandSelections[0], fiveBandSelections[1], fiveBandSelections[2], fiveBandSelections[3]);
-                    result.setText(Calculator.getRoughNumber(resultati5band));
+                    double result5band = Calculator.calculate5Band(fiveBandSelections[0], fiveBandSelections[1], fiveBandSelections[2], fiveBandSelections[3]);
+                    result.setText(Calculator.getRoughNumber(result5band));
                 }
             }
 
@@ -243,12 +240,18 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
     private void spin_band3_listener(Spinner spin_band3) {
         spin_band3.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 int color = elseBandArray.get(position).getDrawable();
                 double no = elseBandArray.get(position).getNumber();
+
 
                 fiveBandSelections[2] = no;
 
@@ -416,7 +419,7 @@ public class MainActivity extends AppCompatActivity {
         bandSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) {
+                if (position == 0 || position ==1) {
                     temp.setVisibility(View.GONE);
                     tempText.setVisibility(View.GONE);
                 } else {

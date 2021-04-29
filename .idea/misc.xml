@@ -12,6 +12,7 @@
         <entry key="app/src/main/res/drawable/resistor_5_band.xml" value="0.18385416666666668" />
         <entry key="app/src/main/res/drawable/resistor_6_band.xml" value="0.18385416666666668" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.31354166666666666" />
+        <entry key="app/src/main/res/layout/activity_splash.xml" value="0.31354166666666666" />
         <entry key="app/src/main/res/layout/band_spinner_row.xml" value="0.31354166666666666" />
         <entry key="app/src/main/res/layout/list_item.xml" value="0.31354166666666666" />
         <entry key="app/src/main/res/layout/search_dialog.xml" value="0.31354166666666666" />

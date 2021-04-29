@@ -6,6 +6,6 @@
         android:icon="@drawable/ic_baseline_search_24"
         android:orderInCategory="100"
         app:showAsAction="ifRoom"
-        android:title="Search" />
+        android:title="Search Resistor" />
 
 </menu>
