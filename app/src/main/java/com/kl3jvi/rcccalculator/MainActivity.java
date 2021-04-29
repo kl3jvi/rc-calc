@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,6 +19,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -149,7 +149,6 @@ public class MainActivity extends AppCompatActivity {
         // Handle item selection
         int itemId = item.getItemId();
         if (itemId == R.id.search) {
-//            dialog.show();
             showDialog();
             return true;
         }
@@ -354,7 +353,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void spinnerListener(@NonNull AutoCompleteTextView spinBands) {
         adapter = new ArrayAdapter<>(MainActivity.this,
-                R.layout.list_item, getResources()
+                android.R.layout.simple_list_item_1, getResources()
                 .getStringArray(R.array.number_bands));
         spinBands.setAdapter(adapter);
         td.setText(adapter.getItem(0), false);
@@ -394,41 +393,36 @@ public class MainActivity extends AppCompatActivity {
         builder.setTitle("Search Resistor");
         builder.setIcon(R.drawable.resistor_4_band);
         builder.setPositiveButton("Search", null);
-        builder.setNegativeButton("Cancel", null);
+
         LayoutInflater inflater = this.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.search_dialog, null);
 
+        builder.setView(dialogView);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
 
         ohmSizesAdapter = new ArrayAdapter<>(MainActivity.this,
                 android.R.layout.simple_list_item_1, getResources()
                 .getStringArray(R.array.ohm_size));
 
         EditText size = dialogView.findViewById(R.id.resistanceSize);
-
-        // Makes X drawable in the end to clear text;
-        size.setOnTouchListener((v, event) -> {
-            final int DRAWABLE_RIGHT = 2;
-
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                if (event.getRawX() >= (size.getRight() - size.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-                    // your action here
-                    size.getText().clear();
-                    return true;
-                }
-            }
-            return false;
-        });
-
-        Spinner bandSp = dialogView.findViewById(R.id.bandSp);
         Spinner ohmSize = dialogView.findViewById(R.id.ohmSize);
         Spinner temp = dialogView.findViewById(R.id.tempSpinner);
         Spinner toleranceSpinner = dialogView.findViewById(R.id.toleranceSpinner);
+        TextView tempText = dialogView.findViewById(R.id.kk);
 
-        bandSp.setAdapter(adapter);
+        Spinner bandSp = dialogView.findViewById(R.id.bandSp);
         bandSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
+                if (position == 0) {
+                    temp.setVisibility(View.GONE);
+                    tempText.setVisibility(View.GONE);
+                } else {
+                    tempText.setVisibility(View.VISIBLE);
+                    temp.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -437,15 +431,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        bandSp.setAdapter(adapter);
         ohmSize.setAdapter(ohmSizesAdapter);
         toleranceSpinner.setAdapter(toleranceAdapter);
         temp.setAdapter(temperatureAdapter);
-
-
-        builder.setView(dialogView);
-        AlertDialog dialog = builder.create();
-        dialog.show();
-
-
     }
 }

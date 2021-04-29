@@ -101,10 +101,12 @@
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingStart="10dp"
-            android:paddingLeft="10dp"
+            android:paddingEnd="10dp"
             android:paddingTop="5dp"
             android:paddingBottom="0dp"
             android:weightSum="3">
+
+            <!--0696804652-->
 
             <TextView
                 android:id="@+id/firstband"
@@ -128,7 +130,7 @@
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingStart="10dp"
-            android:paddingLeft="10dp"
+            android:paddingEnd="10dp"
             android:paddingTop="5dp"
             android:paddingBottom="0dp"
             android:weightSum="3">
@@ -155,7 +157,7 @@
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingStart="10dp"
-            android:paddingLeft="10dp"
+            android:paddingEnd="10dp"
             android:paddingTop="5dp"
             android:paddingBottom="0dp"
             android:weightSum="3">
@@ -182,7 +184,7 @@
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingStart="10dp"
-            android:paddingLeft="10dp"
+            android:paddingEnd="10dp"
             android:paddingTop="5dp"
             android:paddingBottom="0dp"
             android:weightSum="3">
@@ -209,7 +211,7 @@
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingStart="10dp"
-            android:paddingLeft="10dp"
+            android:paddingEnd="10dp"
             android:paddingTop="5dp"
             android:paddingBottom="0dp"
             android:weightSum="3">
@@ -236,7 +238,7 @@
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingStart="10dp"
-            android:paddingLeft="10dp"
+            android:paddingEnd="10dp"
             android:paddingTop="5dp"
             android:paddingBottom="0dp"
             android:weightSum="3">
