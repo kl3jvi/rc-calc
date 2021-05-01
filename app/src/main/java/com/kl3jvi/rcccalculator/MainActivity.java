@@ -1,10 +1,8 @@
 package com.kl3jvi.rcccalculator;
 
-import static com.kl3jvi.rcccalculator.utils.Calculator.initArrays;
-
-import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,8 +28,10 @@ import com.sdsmdg.harjot.vectormaster.models.PathModel;
 
 import java.util.ArrayList;
 
+import static com.kl3jvi.rcccalculator.utils.Calculator.initArrays;
+
 public class MainActivity extends AppCompatActivity {
-    private Spinner spinBands, spin_band1, spin_band2, spin_band3, multiplier_band, tolerance_band, temperature_band;
+    private Spinner spin_band1, spin_band2, spin_band3, multiplier_band, tolerance_band, temperature_band;
     private ImageView imageView;
     private ArrayList<ColorDetails> firstBandArray, elseBandArray, mttArray, toleranceArray, temperatureArray;
     private ColorAdapter firstAdapter, elseAdapter, mttAdapter, toleranceAdapter;
@@ -40,8 +40,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView result, resultTolerance, resultTemperature;
     private VectorMasterDrawable resistor_4, resistor_5, resistor_6;
     private double[] fourBandSelections, fiveBandSelections, sixBandSelections;
-    private AutoCompleteTextView td;
-    private int state = 4;
+    private AutoCompleteTextView spinBands;
+    private int state = 4, dialogState = 4;
     private ArrayAdapter<String> adapter, ohmSizesAdapter;
 
 
@@ -57,14 +57,12 @@ public class MainActivity extends AppCompatActivity {
         temperatureArray = new ArrayList<>();
 
         imageView = findViewById(R.id.imageView);
-        spinBands = findViewById(R.id.spinBands);
-
-        td = findViewById(R.id.drp);
+        spinBands = findViewById(R.id.drp);
 
 
         // Spinner that listens to band changes --> put on a method for ease;
         // Changes from 4 to 5 to 6 bands;
-        spinnerListener(td);
+        spinnerListener(spinBands);
 
         // Initialisation of the spinner views
         spin_band1 = findViewById(R.id.band1);
@@ -286,7 +284,7 @@ public class MainActivity extends AppCompatActivity {
                 fourBandSelections[1] = no;
                 fiveBandSelections[1] = no;
 
-                Log.e("Number", no + "");
+
                 PathModel res4_band2 = resistor_4.getPathModelByName("b2");
                 PathModel res5_band2 = resistor_5.getPathModelByName("b2");
                 PathModel res6_band2 = resistor_6.getPathModelByName("b2");
@@ -359,7 +357,7 @@ public class MainActivity extends AppCompatActivity {
                 android.R.layout.simple_list_item_1, getResources()
                 .getStringArray(R.array.number_bands));
         spinBands.setAdapter(adapter);
-        td.setText(adapter.getItem(0), false);
+        spinBands.setText(adapter.getItem(0), false);
 
         spinBands.setOnItemClickListener((parent, view, position, id) -> {
             switch (position) {
@@ -389,7 +387,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    @SuppressLint("ClickableViewAccessibility")
     private void showDialog() {
         LayoutInflater inflater = this.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.search_dialog, null);
@@ -399,12 +396,35 @@ public class MainActivity extends AppCompatActivity {
                 .getStringArray(R.array.ohm_size));
 
 
+        // Initialisation of the inflated views
         EditText size = dialogView.findViewById(R.id.resistanceSize);
         Spinner ohmSize = dialogView.findViewById(R.id.ohmSize);
         Spinner temp = dialogView.findViewById(R.id.tempSpinner);
         Spinner toleranceSpinner = dialogView.findViewById(R.id.toleranceSpinner);
         TextView tempText = dialogView.findViewById(R.id.kk);
         Spinner bandSp = dialogView.findViewById(R.id.bandSp);
+        TextView noResult = dialogView.findViewById(R.id.noResult);
+        noResult.setVisibility(View.GONE);
+
+
+        // Edit text text listener to hide the no result found!!
+        size.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                noResult.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
 
         bandSp.setAdapter(adapter);
         ohmSize.setAdapter(ohmSizesAdapter);
@@ -414,12 +434,18 @@ public class MainActivity extends AppCompatActivity {
         bandSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0 || position == 1) {
+                if (position == 0) {
                     temp.setVisibility(View.GONE);
                     tempText.setVisibility(View.GONE);
+                    dialogState = 4;
+                } else if (position == 1) {
+                    temp.setVisibility(View.GONE);
+                    tempText.setVisibility(View.GONE);
+                    dialogState = 5;
                 } else {
                     tempText.setVisibility(View.VISIBLE);
                     temp.setVisibility(View.VISIBLE);
+                    dialogState = 6;
                 }
             }
 
@@ -430,77 +456,30 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
-
-
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle("Search Resistor")
                 .setView(dialogView)
-                .setPositiveButton("Search", (dialogInterface, i) -> {
-                    int[] number = Calculator.test(size.getText().toString());
-
-                    spin_band1.setSelection(number[0]-1);
-                    spin_band2.setSelection(number[1]);
-                    tolerance_band.setSelection(toleranceSpinner.getSelectedItemPosition());
-
-                })
+                .setPositiveButton("Search", null)
                 .setNegativeButton("Cancel", null)
                 .create();
-        dialog.show();
 
-//
-//        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-//        builder.setTitle("Search Resistor");
-//
-//
-//        Spinner ohmSize = dialogView.findViewById(R.id.ohmSize);
-//        Spinner temp = dialogView.findViewById(R.id.tempSpinner);
-//        Spinner toleranceSpinner = dialogView.findViewById(R.id.toleranceSpinner);
-//        TextView tempText = dialogView.findViewById(R.id.kk);
-//        Spinner bandSp = dialogView.findViewById(R.id.bandSp);
-//
-//        ohmSizesAdapter = new ArrayAdapter<>(MainActivity.this,
-//                android.R.layout.simple_list_item_1, getResources()
-//                .getStringArray(R.array.ohm_size));
-//
-//
-//        bandSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                if (position == 0 || position == 1) {
-//                    temp.setVisibility(View.GONE);
-//                    tempText.setVisibility(View.GONE);
-//                } else {
-//                    tempText.setVisibility(View.VISIBLE);
-//                    temp.setVisibility(View.VISIBLE);
-//                }
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//
-//            }
-//        });
-//
-//        bandSp.setAdapter(adapter);
-//        ohmSize.setAdapter(ohmSizesAdapter);
-//        toleranceSpinner.setAdapter(toleranceAdapter);
-//        temp.setAdapter(temperatureAdapter);
-//
-//
-//        AlertDialog dialog = builder.create();
-//
-//        builder.setIcon(R.drawable.resistor_4_band);
-//        builder.setPositiveButton("Search", (dialog1, which) -> {
-//            int[] number = Calculator.test(size.getText().toString());
-//            spin_band1.setSelection(number[0]);
-//            spin_band2.setSelection(number[1]);
-//
-//        });
-//        builder.setView(dialogView);
-//        dialog.show();
+        dialog.show();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(dialogState==4){
+                    if (!size.getText().toString().isEmpty() && size.getText().toString().length()>=2) {
+                        int[] number = Calculator.test(size.getText().toString());
+                        spin_band1.setSelection(number[0] - 1);
+                        spin_band2.setSelection(number[1]);
+                        tolerance_band.setSelection(toleranceSpinner.getSelectedItemPosition());
+                        dialog.dismiss();
+                    } else noResult.setVisibility(View.VISIBLE);
+                }
+
+                //else dialog stays open. Make sure you have an obvious way to close the dialog especially if you set cancellable to false.
+            }
+        });
 
     }
-
-
 }
