@@ -391,35 +391,30 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("ClickableViewAccessibility")
     private void showDialog() {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setTitle("Search Resistor");
-        builder.setIcon(R.drawable.resistor_4_band);
-        builder.setPositiveButton("Search", null);
-
         LayoutInflater inflater = this.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.search_dialog, null);
-
-        builder.setView(dialogView);
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
 
         ohmSizesAdapter = new ArrayAdapter<>(MainActivity.this,
                 android.R.layout.simple_list_item_1, getResources()
                 .getStringArray(R.array.ohm_size));
+
 
         EditText size = dialogView.findViewById(R.id.resistanceSize);
         Spinner ohmSize = dialogView.findViewById(R.id.ohmSize);
         Spinner temp = dialogView.findViewById(R.id.tempSpinner);
         Spinner toleranceSpinner = dialogView.findViewById(R.id.toleranceSpinner);
         TextView tempText = dialogView.findViewById(R.id.kk);
-
         Spinner bandSp = dialogView.findViewById(R.id.bandSp);
+
+        bandSp.setAdapter(adapter);
+        ohmSize.setAdapter(ohmSizesAdapter);
+        toleranceSpinner.setAdapter(toleranceAdapter);
+        temp.setAdapter(temperatureAdapter);
+
         bandSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0 || position ==1) {
+                if (position == 0 || position == 1) {
                     temp.setVisibility(View.GONE);
                     tempText.setVisibility(View.GONE);
                 } else {
@@ -434,9 +429,78 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        bandSp.setAdapter(adapter);
-        ohmSize.setAdapter(ohmSizesAdapter);
-        toleranceSpinner.setAdapter(toleranceAdapter);
-        temp.setAdapter(temperatureAdapter);
+
+
+
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("Search Resistor")
+                .setView(dialogView)
+                .setPositiveButton("Search", (dialogInterface, i) -> {
+                    int[] number = Calculator.test(size.getText().toString());
+
+                    spin_band1.setSelection(number[0]-1);
+                    spin_band2.setSelection(number[1]);
+                    tolerance_band.setSelection(toleranceSpinner.getSelectedItemPosition());
+
+                })
+                .setNegativeButton("Cancel", null)
+                .create();
+        dialog.show();
+
+//
+//        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+//        builder.setTitle("Search Resistor");
+//
+//
+//        Spinner ohmSize = dialogView.findViewById(R.id.ohmSize);
+//        Spinner temp = dialogView.findViewById(R.id.tempSpinner);
+//        Spinner toleranceSpinner = dialogView.findViewById(R.id.toleranceSpinner);
+//        TextView tempText = dialogView.findViewById(R.id.kk);
+//        Spinner bandSp = dialogView.findViewById(R.id.bandSp);
+//
+//        ohmSizesAdapter = new ArrayAdapter<>(MainActivity.this,
+//                android.R.layout.simple_list_item_1, getResources()
+//                .getStringArray(R.array.ohm_size));
+//
+//
+//        bandSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                if (position == 0 || position == 1) {
+//                    temp.setVisibility(View.GONE);
+//                    tempText.setVisibility(View.GONE);
+//                } else {
+//                    tempText.setVisibility(View.VISIBLE);
+//                    temp.setVisibility(View.VISIBLE);
+//                }
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//        });
+//
+//        bandSp.setAdapter(adapter);
+//        ohmSize.setAdapter(ohmSizesAdapter);
+//        toleranceSpinner.setAdapter(toleranceAdapter);
+//        temp.setAdapter(temperatureAdapter);
+//
+//
+//        AlertDialog dialog = builder.create();
+//
+//        builder.setIcon(R.drawable.resistor_4_band);
+//        builder.setPositiveButton("Search", (dialog1, which) -> {
+//            int[] number = Calculator.test(size.getText().toString());
+//            spin_band1.setSelection(number[0]);
+//            spin_band2.setSelection(number[1]);
+//
+//        });
+//        builder.setView(dialogView);
+//        dialog.show();
+
     }
+
+
 }

@@ -41,6 +41,7 @@ dependencies {
     // Library for the beautiful dialogs I always use maaan
     implementation 'com.yarolegovich:lovely-dialog:1.1.1'
 
+    
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

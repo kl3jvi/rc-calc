@@ -104,5 +104,14 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="No results found!"
+        android:textColor="#FF8800"
+        android:textStyle="italic" />
+
 
 </LinearLayout>

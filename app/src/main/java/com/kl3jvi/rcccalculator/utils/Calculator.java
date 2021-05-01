@@ -6,6 +6,7 @@ import com.kl3jvi.rcccalculator.adapters.ColorDetails;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class Calculator {
 
@@ -85,5 +86,24 @@ public class Calculator {
 
     public static double calculate5Band(double band1, double band2, double band3, double multiplicator) {
         return ((band1 * 100.0) + (band2 * 10.0) + band3) * multiplicator;
+    }
+
+    public static int[] test(String str) {
+        // TODO Use Stack to push values to it;
+        LinkedList<Integer> stack = new LinkedList<>();
+        int[] arr = new int[str.length()];
+        int number = Integer.parseInt(str);
+        while (number > 0) {
+            stack.push(number % 10);
+            number /= 10;
+        }
+
+
+        for (int i = 0; i < str.length(); i++) {
+            if (!stack.isEmpty()) {
+                arr[i] = stack.pop();
+            }
+        }
+        return arr;
     }
 }
