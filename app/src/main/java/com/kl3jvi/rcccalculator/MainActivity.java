@@ -405,6 +405,8 @@ public class MainActivity extends AppCompatActivity {
         Spinner toleranceSpinner = dialogView.findViewById(R.id.toleranceSpinner);
         TextView tempText = dialogView.findViewById(R.id.kk);
         Spinner bandSp = dialogView.findViewById(R.id.bandSp);
+        TextView noResult = dialogView.findViewById(R.id.noResult);
+        noResult.setVisibility(View.GONE);
 
         bandSp.setAdapter(adapter);
         ohmSize.setAdapter(ohmSizesAdapter);
@@ -414,12 +416,19 @@ public class MainActivity extends AppCompatActivity {
         bandSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0 || position == 1) {
+                if (position == 0) {
                     temp.setVisibility(View.GONE);
                     tempText.setVisibility(View.GONE);
+                    state = 4;
+                } else if (position == 1) {
+                    temp.setVisibility(View.GONE);
+                    tempText.setVisibility(View.GONE);
+                    state = 5;
+
                 } else {
                     tempText.setVisibility(View.VISIBLE);
                     temp.setVisibility(View.VISIBLE);
+                    state = 6;
                 }
             }
 
@@ -430,18 +439,19 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
-
-
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle("Search Resistor")
                 .setView(dialogView)
                 .setPositiveButton("Search", (dialogInterface, i) -> {
-                    int[] number = Calculator.test(size.getText().toString());
-
-                    spin_band1.setSelection(number[0]-1);
-                    spin_band2.setSelection(number[1]);
-                    tolerance_band.setSelection(toleranceSpinner.getSelectedItemPosition());
+                    if (!size.getText().toString().isEmpty()) {
+                        int[] number = Calculator.test(size.getText().toString());
+                        spin_band1.setSelection(number[0] - 1);
+                        spin_band2.setSelection(number[1]);
+                        tolerance_band.setSelection(toleranceSpinner.getSelectedItemPosition());
+                    }
+                    else {
+                        noResult.setVisibility(View.VISIBLE);
+                    }
 
                 })
                 .setNegativeButton("Cancel", null)
