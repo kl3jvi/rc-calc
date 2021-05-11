@@ -4,6 +4,7 @@ import static com.kl3jvi.rcccalculator.utils.Calculator.initArrays;
 
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -42,7 +43,13 @@ public class MainActivity extends AppCompatActivity {
     private Spinner spinBands;
     private int state = 4, dialogState = 4;
     private ArrayAdapter<String> adapter, ohmSizesAdapter;
+    private int suffix = 0;
 
+    public static void setEditTextMaxLength(EditText editText, int length) {
+        InputFilter[] FilterArray = new InputFilter[1];
+        FilterArray[0] = new InputFilter.LengthFilter(length);
+        editText.setFilters(FilterArray);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,7 +156,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
     private void temperature_band_listener(Spinner temperature_band) {
         temperature_band.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -198,7 +204,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 
     private void multiplier_band_listener(Spinner multiplier_band) {
         multiplier_band.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -395,7 +400,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
     private void showDialog() {
         LayoutInflater inflater = this.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.search_dialog, null);
@@ -465,6 +469,36 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        ohmSize.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0:
+                        suffix = 0;
+                        setEditTextMaxLength(size, 11 - suffix);
+                        break;
+                    case 1:
+                        suffix = 4; // 1 000
+                        setEditTextMaxLength(size, 11 - suffix);
+                        break;
+                    case 2:
+                        suffix = 6; // 100 000
+                        setEditTextMaxLength(size, 11 - suffix);
+                        break;
+                    case 3:
+                        suffix = 9; // 100 000 000
+                        setEditTextMaxLength(size, 11 - suffix);
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle("Search Resistor")
                 .setView(dialogView)
@@ -483,49 +517,116 @@ public class MainActivity extends AppCompatActivity {
                 case 4:
                     if (!inputIsEmpty && inputLength >= 2) {
                         int[] number = Calculator.test(input);
+
                         spin_band1.setSelection(number[0] - 1);
                         spin_band2.setSelection(number[1]);
-                        int counter=0;
-                        for (int i = 2; i < number.length; i++) {
-                            if(number[i]==0){
-                                counter++;
-                            }else noResult.setVisibility(View.VISIBLE);
+                        int counter = 0;
+
+                        // Test arr = [1,2,3]
+                        // arr.length ==> 3;
+                        // arr[0] =1; arr[1]=2; arr[2]=3;
+
+                        if (size.length() == 2) {
+                            spin_band1.setSelection(number[0] - 1);
+                            spin_band2.setSelection(number[1]);
+                            multiplier_band.setSelection(counter + suffix);
+                            tolerance_band.setSelection(toleranceSpinner.getSelectedItemPosition());
+                            dialog.dismiss();
                         }
 
-                        multiplier_band.setSelection(counter);
+
+                        for (int i = 2; i < number.length; i++) {
+                            if (number[i] != 0) {
+                                noResult.setVisibility(View.VISIBLE);
+                            } else {
+                                counter++;
+                                dialog.dismiss();
+                            }
+                        }
+
+                        multiplier_band.setSelection(counter + suffix);
                         tolerance_band.setSelection(toleranceSpinner.getSelectedItemPosition());
-                        dialog.dismiss();
+                        spinBands.setSelection(0);
+
                     } else noResult.setVisibility(View.VISIBLE);
                     break;
                 case 5:
-                    spinBands.setSelection(1);
+                    if (!inputIsEmpty && inputLength >= 3) {
+                        int[] number = Calculator.test(input);
+
+                        spin_band1.setSelection(number[0] - 1);
+                        spin_band2.setSelection(number[1]);
+                        spin_band3.setSelection(number[2]);
+                        int counter = 0;
+
+                        // Test arr = [1,2,3]
+                        // arr.length ==> 3;
+                        // arr[0] =1; arr[1]=2; arr[2]=3;
+
+                        if (number.length == 3) {
+                            spin_band1.setSelection(number[0] - 1);
+                            spin_band2.setSelection(number[1]);
+                            spin_band3.setSelection(number[2]);
+                            multiplier_band.setSelection(counter + suffix);
+                            tolerance_band.setSelection(toleranceSpinner.getSelectedItemPosition());
+                            dialog.dismiss();
+                        }
+
+
+                        for (int i = 3; i <= number.length - 1; i++) {
+                            if (number[i] != 0) {
+                                noResult.setVisibility(View.VISIBLE);
+                            } else {
+                                counter++;
+                                dialog.dismiss();
+                            }
+                        }
+
+                        multiplier_band.setSelection(counter + suffix);
+                        tolerance_band.setSelection(toleranceSpinner.getSelectedItemPosition());
+                        spinBands.setSelection(1);
+                    } else noResult.setVisibility(View.VISIBLE);
                     break;
                 case 6:
-                    spinBands.setSelection(2);
+                    if (!inputIsEmpty && inputLength >= 3) {
+                        int[] number = Calculator.test(input);
+
+                        spin_band1.setSelection(number[0] - 1);
+                        spin_band2.setSelection(number[1]);
+                        spin_band3.setSelection(number[2]);
+                        int counter = 0;
+
+                        // Test arr = [1,2,3]
+                        // arr.length ==> 3;
+                        // arr[0] =1; arr[1]=2; arr[2]=3;
+
+                        if (number.length == 3) {
+                            spin_band1.setSelection(number[0] - 1);
+                            spin_band2.setSelection(number[1]);
+                            spin_band3.setSelection(number[2]);
+                            multiplier_band.setSelection(counter + suffix);
+                            tolerance_band.setSelection(toleranceSpinner.getSelectedItemPosition());
+                            temperature_band.setSelection(temp.getSelectedItemPosition());
+                            dialog.dismiss();
+                        }
+
+
+                        for (int i = 3; i <= number.length - 1; i++) {
+                            if (number[i] != 0) {
+                                noResult.setVisibility(View.VISIBLE);
+                            } else {
+                                counter++;
+                                dialog.dismiss();
+                            }
+                        }
+
+                        multiplier_band.setSelection(counter + suffix);
+                        tolerance_band.setSelection(toleranceSpinner.getSelectedItemPosition());
+                        temperature_band.setSelection(temp.getSelectedItemPosition());
+                        spinBands.setSelection(2);
+                    } else noResult.setVisibility(View.VISIBLE);
                     break;
             }
-
-//
-//                if (!size.getText().toString().isEmpty() && size.getText().toString().length() > 2) {
-//                    int[] number = Calculator.test(size.getText().toString());
-//                    spin_band1.setSelection(number[0] - 1);
-//                    spin_band2.setSelection(number[1]);
-//                    String forMultiplier = size.getText().toString().substring(2);
-//
-//                    for (int i = 0; i <=forMultiplier.length(); i++) {
-//                        if (number[i] != 0) {
-//                            noResult.setVisibility(View.VISIBLE);
-//                        } else {
-//                            int length = forMultiplier.length();
-//                            multiplier_band.setSelection(length);
-//                            tolerance_band.setSelection(toleranceSpinner.getSelectedItemPosition());
-//
-//                            dialog.dismiss();
-//                        }
-//                    }
-//                    spinBands.setSelection(dialogState);
-//                } else noResult.setVisibility(View.VISIBLE);
-//
         });
     }
 
