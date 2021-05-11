@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -40,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView result, resultTolerance, resultTemperature;
     private VectorMasterDrawable resistor_4, resistor_5, resistor_6;
     private double[] fourBandSelections, fiveBandSelections, sixBandSelections;
-    private AutoCompleteTextView spinBands;
+    private Spinner spinBands;
     private int state = 4, dialogState = 4;
     private ArrayAdapter<String> adapter, ohmSizesAdapter;
 
@@ -57,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         temperatureArray = new ArrayList<>();
 
         imageView = findViewById(R.id.imageView);
-        spinBands = findViewById(R.id.drp);
+        spinBands = findViewById(R.id.spinBands);
 
 
         // Spinner that listens to band changes --> put on a method for ease;
@@ -352,42 +351,48 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void spinnerListener(@NonNull AutoCompleteTextView spinBands) {
+    public void spinnerListener(@NonNull Spinner spinBands) {
         adapter = new ArrayAdapter<>(MainActivity.this,
                 android.R.layout.simple_list_item_1, getResources()
                 .getStringArray(R.array.number_bands));
         spinBands.setAdapter(adapter);
-        spinBands.setText(adapter.getItem(0), false);
 
 
+        spinBands.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0:
+                        imageView.setImageDrawable(resistor_4);
+                        thirdBandLayout.setVisibility(View.GONE);
+                        temperatureLayout.setVisibility(View.GONE);
+                        resultTemperature.setVisibility(View.GONE);
+                        state = 4;
+                        break;
+                    case 1:
+                        imageView.setImageDrawable(resistor_5);
+                        thirdBandLayout.setVisibility(View.VISIBLE);
+                        temperatureLayout.setVisibility(View.GONE);
+                        resultTemperature.setVisibility(View.GONE);
+                        state = 5;
+                        break;
+                    case 2:
+                        imageView.setImageDrawable(resistor_6);
+                        thirdBandLayout.setVisibility(View.VISIBLE);
+                        temperatureLayout.setVisibility(View.VISIBLE);
+                        resultTemperature.setVisibility(View.VISIBLE);
+                        state = 6;
+                        break;
+                }
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
-
-        spinBands.setOnItemClickListener((parent, view, position, id) -> {
-            switch (position) {
-                case 0:
-                    imageView.setImageDrawable(resistor_4);
-                    thirdBandLayout.setVisibility(View.GONE);
-                    temperatureLayout.setVisibility(View.GONE);
-                    resultTemperature.setVisibility(View.GONE);
-                    state = 4;
-                    break;
-                case 1:
-                    imageView.setImageDrawable(resistor_5);
-                    thirdBandLayout.setVisibility(View.VISIBLE);
-                    temperatureLayout.setVisibility(View.GONE);
-                    resultTemperature.setVisibility(View.GONE);
-                    state = 5;
-                    break;
-                case 2:
-                    imageView.setImageDrawable(resistor_6);
-                    thirdBandLayout.setVisibility(View.VISIBLE);
-                    temperatureLayout.setVisibility(View.VISIBLE);
-                    resultTemperature.setVisibility(View.VISIBLE);
-                    state = 6;
-                    break;
             }
         });
+
+
     }
 
 
@@ -468,13 +473,37 @@ public class MainActivity extends AppCompatActivity {
                 .create();
 
         dialog.show();
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
-            if (dialogState == 5) {
-                spinBands.setText(adapter.getItem(1), true);
-                adapter.notifyDataSetChanged();
-                dialog.dismiss();
-            }
 
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+            boolean inputIsEmpty = size.getText().toString().isEmpty();
+            int inputLength = size.getText().toString().length();
+            String input = size.getText().toString();
+            switch (dialogState) {
+                case 4:
+                    if (!inputIsEmpty && inputLength >= 2) {
+                        int[] number = Calculator.test(input);
+                        spin_band1.setSelection(number[0] - 1);
+                        spin_band2.setSelection(number[1]);
+                        int counter=0;
+                        for (int i = 2; i < number.length; i++) {
+                            if(number[i]==0){
+                                counter++;
+                            }else noResult.setVisibility(View.VISIBLE);
+                        }
+
+                        multiplier_band.setSelection(counter);
+                        tolerance_band.setSelection(toleranceSpinner.getSelectedItemPosition());
+                        dialog.dismiss();
+                    } else noResult.setVisibility(View.VISIBLE);
+                    break;
+                case 5:
+                    spinBands.setSelection(1);
+                    break;
+                case 6:
+                    spinBands.setSelection(2);
+                    break;
+            }
 
 //
 //                if (!size.getText().toString().isEmpty() && size.getText().toString().length() > 2) {
@@ -498,5 +527,11 @@ public class MainActivity extends AppCompatActivity {
 //                } else noResult.setVisibility(View.VISIBLE);
 //
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        spinnerListener(spinBands);
     }
 }
