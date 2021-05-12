@@ -491,13 +491,11 @@ public class MainActivity extends AppCompatActivity {
                         break;
                 }
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
-
 
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle("Search Resistor")
@@ -507,7 +505,6 @@ public class MainActivity extends AppCompatActivity {
                 .create();
 
         dialog.show();
-
 
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
             boolean inputIsEmpty = size.getText().toString().isEmpty();
@@ -533,7 +530,6 @@ public class MainActivity extends AppCompatActivity {
                             tolerance_band.setSelection(toleranceSpinner.getSelectedItemPosition());
                             dialog.dismiss();
                         }
-
 
                         for (int i = 2; i < number.length; i++) {
                             if (number[i] != 0) {
